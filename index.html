@@ -1,4 +1,4 @@
-<!doctype html>
+html = r'''<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -20,42 +20,159 @@ h1{font-size:27px;line-height:1.15;letter-spacing:-.8px;margin:7px 0 9px}.eyebro
 @media(min-width:500px){.wrap{padding-top:25px}.rooms{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
-<body><main class="wrap">
-<header class="top"><div class="brand"><div class="logo">⌁</div><span>aula</span></div><div class="pill">Modo simulación</div></header>
+<body>
+<main class="wrap">
+<header class="top">
+  <div class="brand"><div class="logo">⌁</div><span>aula</span></div>
+  <div class="pill">Modo simulación</div>
+</header>
+
 <section id="login" class="login">
-<div class="card">
-<div class="eyebrow">ILUMINACIÓN ESCOLAR</div><h1>Una vista de tu escuela.<br><span style="color:var(--blue)">Cada luz bajo control.</span></h1>
-<p class="sub">Ingresá la contraseña para acceder al sistema de iluminación.</p>
-<input id="pass" class="input" type="password" placeholder="Contraseña de acceso" autocomplete="current-password">
-<button class="primary full" onclick="login()">Ingresar <span aria-hidden="true">→</span></button>
-<div id="msg" class="error" aria-live="polite"></div>
-</div><p class="foot">Aula · Control de iluminación escolar</p>
+  <div class="card">
+    <div class="eyebrow">ILUMINACIÓN ESCOLAR</div>
+    <h1>Una vista de tu escuela.<br><span style="color:var(--blue)">Cada luz bajo control.</span></h1>
+    <p class="sub">Ingresá la contraseña para acceder al sistema de iluminación.</p>
+    <input id="pass" class="input" type="password" placeholder="Contraseña de acceso" autocomplete="current-password">
+    <button type="button" class="primary full" onclick="login()">Ingresar <span aria-hidden="true">→</span></button>
+    <div id="msg" class="error" aria-live="polite"></div>
+  </div>
+  <p class="foot">Aula · Control de iluminación escolar</p>
 </section>
+
 <section id="app" class="hidden">
-<div style="margin:10px 2px 15px"><div class="eyebrow">MI ESCUELA</div><h1 style="font-size:25px">Control de iluminación</h1><p class="sub">53 salones distribuidos en 3 pisos</p></div>
-<div class="card"><div class="stats"><div class="stat"><strong>53</strong><span>Salones</span></div><div class="stat good"><strong id="on">0</strong><span>Encendidos</span></div><div class="stat off"><strong id="off">53</strong><span>Apagados</span></div></div></div>
-<div class="card"><div class="section-head"><h2>Control de toda la escuela</h2><span class="small">53 luces</span></div><div class="actions"><button class="primary" onclick="all(true)">✦ Encender todas</button><button class="neutral" onclick="all(false)">Apagar todas</button></div></div>
-<div class="card"><div class="section-head"><h2>Mapa de salones</h2><span class="small" id="floorCount">17 salones</span></div>
-<div class="floor-tabs"><button id="t0" class="active" onclick="floor(0)">Planta baja</button><button id="t1" onclick="floor(1)">Primer piso</button><button id="t2" onclick="floor(2)">Segundo piso</button></div>
-<div class="floor-info"><strong id="floorName">Planta baja</strong><span id="summary">0 encendidos · 17 apagados</span></div>
-<div class="rooms" id="rooms"></div></div>
-<button class="neutral full" onclick="logout()">Cerrar sesión</button>
-<p class="foot">Simulación visual · Sin conexión física al ESP32</p>
-</section></main>
+  <div style="margin:10px 2px 15px">
+    <div class="eyebrow">MI ESCUELA</div>
+    <h1 style="font-size:25px">Control de iluminación</h1>
+    <p class="sub">53 salones distribuidos en 3 pisos</p>
+  </div>
+
+  <div class="card">
+    <div class="stats">
+      <div class="stat"><strong>53</strong><span>Salones</span></div>
+      <div class="stat good"><strong id="on">0</strong><span>Encendidos</span></div>
+      <div class="stat off"><strong id="off">53</strong><span>Apagados</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-head"><h2>Control de toda la escuela</h2><span class="small">53 luces</span></div>
+    <div class="actions">
+      <button type="button" class="primary" onclick="setAllLights(true)">✦ Encender todas</button>
+      <button type="button" class="neutral" onclick="setAllLights(false)">Apagar todas</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-head"><h2>Mapa de salones</h2><span class="small" id="floorCount">17 salones</span></div>
+    <div class="floor-tabs">
+      <button type="button" id="t0" class="active" onclick="floor(0)">Planta baja</button>
+      <button type="button" id="t1" onclick="floor(1)">Primer piso</button>
+      <button type="button" id="t2" onclick="floor(2)">Segundo piso</button>
+    </div>
+    <div class="floor-info"><strong id="floorName">Planta baja</strong><span id="summary">0 encendidos · 17 apagados</span></div>
+    <div class="rooms" id="rooms"></div>
+  </div>
+
+  <button type="button" class="neutral full" onclick="logout()">Cerrar sesión</button>
+  <p class="foot">Simulación visual · Sin conexión física al ESP32</p>
+</section>
+</main>
+
 <script>
-const PASSWORD="aula53";
-const floors=[{name:"Planta baja",start:1,count:17},{name:"Primer piso",start:18,count:20},{name:"Segundo piso",start:38,count:16}];
-let states=Array(53).fill(false),selected=0;
-function login(){const v=document.getElementById("pass").value.trim();if(v===PASSWORD){document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");document.getElementById("msg").textContent="";draw()}else{document.getElementById("msg").textContent="Contraseña incorrecta. Revisá e intentá de nuevo.";document.getElementById("pass").value="";}}
-document.getElementById("pass").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
-function floor(n){selected=n;draw()}
-function all(v){states.fill(v);draw()}
-function logout(){document.getElementById("app").classList.add("hidden");document.getElementById("login").classList.remove("hidden");document.getElementById("pass").value=""}
-function toggle(n){states[n-1]=!states[n-1];draw()}
-function draw(){let on=states.filter(Boolean).length,f=floors[selected],local=0,html="";
-document.getElementById("on").textContent=on;document.getElementById("off").textContent=53-on;
-floors.forEach((x,i)=>document.getElementById("t"+i).classList.toggle("active",i===selected));
-for(let n=f.start;n<f.start+f.count;n++){let yes=states[n-1];if(yes)local++;html+=`<div class="room ${yes?"on":""}"><div class="room-num">${n}</div><div class="room-state">${yes?"● Encendido":"○ Apagado"}</div><button onclick="toggle(${n})">${yes?"Apagar":"Encender"}</button></div>`}
-document.getElementById("floorName").textContent=f.name;document.getElementById("floorCount").textContent=f.count+" salones";document.getElementById("summary").textContent=local+" encendidos · "+(f.count-local)+" apagados";document.getElementById("rooms").innerHTML=html;
+"use strict";
+
+const PASSWORD = "aula53";
+const floors = [
+  {name:"Planta baja", start:1, count:17},
+  {name:"Primer piso", start:18, count:20},
+  {name:"Segundo piso", start:38, count:16}
+];
+
+let states = Array(53).fill(false);
+let selected = 0;
+
+function login() {
+  const input = document.getElementById("pass");
+  const message = document.getElementById("msg");
+
+  if (input.value.trim() === PASSWORD) {
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    message.textContent = "";
+    draw();
+  } else {
+    message.textContent = "Contraseña incorrecta. Revisá e intentá de nuevo.";
+    input.value = "";
+    input.focus();
+  }
 }
-</script></body></html>
+
+document.getElementById("pass").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") login();
+});
+
+function floor(number) {
+  if (number < 0 || number >= floors.length) return;
+  selected = number;
+  draw();
+}
+
+function setAllLights(value) {
+  states.fill(Boolean(value));
+  draw();
+}
+
+function logout() {
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("pass").value = "";
+}
+
+function toggle(number) {
+  if (number < 1 || number > states.length) return;
+  states[number - 1] = !states[number - 1];
+  draw();
+}
+
+function draw() {
+  const onCount = states.filter(Boolean).length;
+  const currentFloor = floors[selected];
+  let localOn = 0;
+  let roomsHTML = "";
+
+  document.getElementById("on").textContent = onCount;
+  document.getElementById("off").textContent = states.length - onCount;
+
+  floors.forEach(function(item, index) {
+    document.getElementById("t" + index).classList.toggle("active", index === selected);
+  });
+
+  for (let number = currentFloor.start; number < currentFloor.start + currentFloor.count; number++) {
+    const isOn = states[number - 1];
+    if (isOn) localOn++;
+
+    roomsHTML += `
+      <div class="room ${isOn ? "on" : ""}">
+        <div class="room-num">${number}</div>
+        <div class="room-state">${isOn ? "● Encendido" : "○ Apagado"}</div>
+        <button type="button" onclick="toggle(${number})">${isOn ? "Apagar" : "Encender"}</button>
+      </div>`;
+  }
+
+  document.getElementById("floorName").textContent = currentFloor.name;
+  document.getElementById("floorCount").textContent = currentFloor.count + " salones";
+  document.getElementById("summary").textContent =
+    localOn + " encendidos · " + (currentFloor.count - localOn) + " apagados";
+  document.getElementById("rooms").innerHTML = roomsHTML;
+}
+
+// Dibuja el estado inicial de los salones al cargar el archivo.
+draw();
+</script>
+</body>
+</html>
+'''
+path = "/mnt/data/index.html"
+with open(path, "w", encoding="utf-8") as f:
+    f.write(html)
+print(path)
