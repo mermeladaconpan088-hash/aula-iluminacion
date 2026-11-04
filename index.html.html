@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f7fb">
+<title>Aula | Iluminación escolar</title>
+<style>
+:root{--ink:#17243a;--muted:#718096;--line:#e5eaf1;--bg:#f4f7fb;--blue:#315ee7;--blue2:#eaf0ff;--green:#169b62;--greenbg:#e9f8f0;--red:#d84b55;--shadow:0 8px 28px rgba(26,42,70,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.wrap{max-width:560px;margin:auto;padding:18px 15px 32px}.top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 22px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.3px}.logo{width:36px;height:36px;border-radius:12px;background:var(--blue);display:grid;place-items:center;color:white;font-size:19px}.pill{font-size:11px;font-weight:700;background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:99px;color:var(--muted)}.pill:before{content:"";display:inline-block;width:7px;height:7px;background:#f0b44c;border-radius:50%;margin-right:6px}
+h1{font-size:27px;line-height:1.15;letter-spacing:-.8px;margin:7px 0 9px}.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--blue);font-weight:800}.sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
+.card{background:white;border:1px solid var(--line);border-radius:20px;padding:17px;margin:13px 0;box-shadow:var(--shadow)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#f7f9fc;border-radius:14px;padding:12px 8px;text-align:center}.stat strong{font-size:23px;letter-spacing:-.6px}.stat span{display:block;color:var(--muted);font-size:11px;margin-top:3px}.stat.good strong{color:var(--green)}.stat.off strong{color:#8591a3}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.section-head h2{font-size:15px;margin:0;letter-spacing:-.2px}.small{font-size:11px;color:var(--muted)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}button,input{font:inherit}button{border:0;border-radius:12px;padding:13px 12px;font-size:13px;font-weight:750;cursor:pointer;transition:transform .08s,opacity .15s}button:active{transform:scale(.98)}.primary{background:var(--blue);color:white}.soft{background:var(--blue2);color:var(--blue)}.neutral{background:#f0f3f7;color:#475569}
+.floor-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f0f3f8;padding:5px;border-radius:14px;margin:12px 0}.floor-tabs button{background:transparent;color:#718096;padding:11px 5px;font-size:12px}.floor-tabs button.active{background:white;color:var(--blue);box-shadow:0 2px 7px #17243a12}
+.floor-info{display:flex;justify-content:space-between;align-items:center;margin:12px 1px}.floor-info strong{font-size:14px}.floor-info span{font-size:11px;color:var(--muted)}
+.rooms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.room{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px 8px 9px;text-align:center;min-width:0}.room.on{background:var(--greenbg);border-color:#b9e8ce}.room-num{font-size:20px;font-weight:850;letter-spacing:-.5px}.room-state{font-size:10px;color:var(--muted);margin:4px 0 9px}.room.on .room-state{color:var(--green);font-weight:700}.room button{width:100%;padding:9px 4px;border-radius:9px;background:#f0f3f7;color:#526075;font-size:11px}.room.on button{background:var(--green);color:white}
+.login{margin-top:9vh}.login .card{padding:23px}.input{width:100%;padding:14px;border:1px solid #d7dfeb;border-radius:12px;margin:14px 0 8px;outline:none}.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #315ee718}.error{font-size:12px;color:var(--red);min-height:18px}.full{width:100%}.foot{text-align:center;color:#98a2b2;font-size:11px;padding:12px 0}.hidden{display:none!important}
+@media(min-width:500px){.wrap{padding-top:25px}.rooms{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div class="brand"><div class="logo">⌁</div><span>aula</span></div><div class="pill">Modo simulación</div></header>
+<section id="login" class="login">
+<div class="card">
+<div class="eyebrow">ILUMINACIÓN ESCOLAR</div><h1>Una vista de tu escuela.<br><span style="color:var(--blue)">Cada luz bajo control.</span></h1>
+<p class="sub">Ingresá la contraseña para acceder al sistema de iluminación.</p>
+<input id="pass" class="input" type="password" placeholder="Contraseña de acceso" autocomplete="current-password">
+<button class="primary full" onclick="login()">Ingresar <span aria-hidden="true">→</span></button>
+<div id="msg" class="error" aria-live="polite"></div>
+</div><p class="foot">Aula · Control de iluminación escolar</p>
+</section>
+<section id="app" class="hidden">
+<div style="margin:10px 2px 15px"><div class="eyebrow">MI ESCUELA</div><h1 style="font-size:25px">Control de iluminación</h1><p class="sub">53 salones distribuidos en 3 pisos</p></div>
+<div class="card"><div class="stats"><div class="stat"><strong>53</strong><span>Salones</span></div><div class="stat good"><strong id="on">0</strong><span>Encendidos</span></div><div class="stat off"><strong id="off">53</strong><span>Apagados</span></div></div></div>
+<div class="card"><div class="section-head"><h2>Control de toda la escuela</h2><span class="small">53 luces</span></div><div class="actions"><button class="primary" onclick="all(true)">✦ Encender todas</button><button class="neutral" onclick="all(false)">Apagar todas</button></div></div>
+<div class="card"><div class="section-head"><h2>Mapa de salones</h2><span class="small" id="floorCount">17 salones</span></div>
+<div class="floor-tabs"><button id="t0" class="active" onclick="floor(0)">Planta baja</button><button id="t1" onclick="floor(1)">Primer piso</button><button id="t2" onclick="floor(2)">Segundo piso</button></div>
+<div class="floor-info"><strong id="floorName">Planta baja</strong><span id="summary">0 encendidos · 17 apagados</span></div>
+<div class="rooms" id="rooms"></div></div>
+<button class="neutral full" onclick="logout()">Cerrar sesión</button>
+<p class="foot">Simulación visual · Sin conexión física al ESP32</p>
+</section></main>
+<script>
+const PASSWORD="aula53";
+const floors=[{name:"Planta baja",start:1,count:17},{name:"Primer piso",start:18,count:20},{name:"Segundo piso",start:38,count:16}];
+let states=Array(53).fill(false),selected=0;
+function login(){const v=document.getElementById("pass").value.trim();if(v===PASSWORD){document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");document.getElementById("msg").textContent="";draw()}else{document.getElementById("msg").textContent="Contraseña incorrecta. Revisá e intentá de nuevo.";document.getElementById("pass").value="";}}
+document.getElementById("pass").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+function floor(n){selected=n;draw()}
+function all(v){states.fill(v);draw()}
+function logout(){document.getElementById("app").classList.add("hidden");document.getElementById("login").classList.remove("hidden");document.getElementById("pass").value=""}
+function toggle(n){states[n-1]=!states[n-1];draw()}
+function draw(){let on=states.filter(Boolean).length,f=floors[selected],local=0,html="";
+document.getElementById("on").textContent=on;document.getElementById("off").textContent=53-on;
+floors.forEach((x,i)=>document.getElementById("t"+i).classList.toggle("active",i===selected));
+for(let n=f.start;n<f.start+f.count;n++){let yes=states[n-1];if(yes)local++;html+=`<div class="room ${yes?"on":""}"><div class="room-num">${n}</div><div class="room-state">${yes?"● Encendido":"○ Apagado"}</div><button onclick="toggle(${n})">${yes?"Apagar":"Encender"}</button></div>`}
+document.getElementById("floorName").textContent=f.name;document.getElementById("floorCount").textContent=f.count+" salones";document.getElementById("summary").textContent=local+" encendidos · "+(f.count-local)+" apagados";document.getElementById("rooms").innerHTML=html;
+}
+</script></body></html>
